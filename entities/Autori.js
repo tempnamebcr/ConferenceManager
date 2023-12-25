@@ -16,3 +16,5 @@ const Autori = db.define("Autori",
         allowNull:false
     }
 })
+
+export default Autori;

@@ -23,3 +23,6 @@ const Conferinte = db.define("Conferinte",
         allowNull:false
     }
 })
+
+
+export default Conferinte;

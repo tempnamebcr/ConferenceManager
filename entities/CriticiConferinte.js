@@ -25,3 +25,5 @@ const CriticiConferinte = db.define("CriticiConferinte",
         allowNull:false
     }
 })
+
+export default CriticiConferinte;

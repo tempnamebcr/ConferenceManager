@@ -30,3 +30,5 @@ const RecenziiArticole = db.define("RecenziiArticole",
         allowNull:false
     }
 })
+
+export default RecenziiArticole;

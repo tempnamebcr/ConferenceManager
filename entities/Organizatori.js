@@ -1,7 +1,7 @@
 import db from '../dbConfig.js';
 import Sequelize from 'sequelize';
 
-const Organizator = db.define("Organizator",
+const Organizatori = db.define("Organizatori",
 {
     Id:
     {
@@ -16,3 +16,5 @@ const Organizator = db.define("Organizator",
         allowNull:false
     }
 })
+
+export default Organizatori;

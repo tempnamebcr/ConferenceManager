@@ -1,5 +1,12 @@
 import mysql from 'mysql2/promise.js'
 import env from 'dotenv';
+import Articole from './Articole.js';
+import Critici from './Critici.js';
+import Autori from './Autori.js';
+import Conferinte from './Conferinte.js';
+import Organizatori from './Organizatori.js';
+import RecenziiArticole from './RecenziiArticole.js';
+
 
 env.config();
 
@@ -24,34 +31,27 @@ function create_DB(){
 
 function DB_INIT(){
     create_DB();
+    FK_Config();
 }
 function FK_Config(){
-    Organizator.hasMany(Conferinta, { as: 'Conferinte', foreignKey: 'IdOrganizator' });
-    Conferinta.belongsTo(Organizator, { foreignKey: 'IdOrganizator' });
+    Organizatori.hasMany(Conferinte, { as: 'Conferinte', foreignKey: 'IdOrganizator' });
+    Conferinte.belongsTo(Organizatori, { foreignKey: 'IdOrganizator' });
+
+    Articole.hasOne(Critici, {foreignKey: 'IdCriticCareAproba', as: 'CriticCareAproba'});
+    Critici.belongsToMany(Articole, {foreignKey: 'IdCriticCareAproba', through:"IdCriticCareAproba", as: 'ArticoleAprobate'})
+
+    Autori.hasMany(Articole, {as:"Articole", foreignKey:"IdAutor"});
+    Articole.belongsTo(Autori, {as:"Autor", foreignKey:"IdAutor"})
   
-    Conferinta.hasMany(CriticiConferinte, { as: 'CriticiConferinte', foreignKey: 'IdConferinta' });
-    CriticiConferinte.belongsTo(Conferinta, { foreignKey: 'IdConferinta' });
-  
-    Autor.hasMany(Articol, { as: 'Articole', foreignKey: 'IdAutor' });
-    Articol.belongsTo(Autor, { foreignKey: 'IdAutor' });
-  
-    Articol.hasMany(AprobariArticole, { as: 'AprobariArticole', foreignKey: 'IdArticol' });
-    AprobariArticole.belongsTo(Articol, { foreignKey: 'IdArticol' });
-  
-    Critici.hasMany(CriticiConferinte, { as: 'CriticiConferinte', foreignKey: 'IdCritic' });
-    CriticiConferinte.belongsTo(Critici, { foreignKey: 'IdCritic' });
-  
-    Critici.hasMany(RecenziiArticole, { as: 'RecenziiArticole', foreignKey: 'IdCritic' });
-    RecenziiArticole.belongsTo(Critici, { foreignKey: 'IdCritic' });
-  
-    Articol.belongsToMany(Critici, { through: RecenziiArticole, foreignKey: 'IdArticol' });
-    Critici.belongsToMany(Articol, { through: RecenziiArticole, foreignKey: 'IdCritic' });
-  
-    CriticiConferinte.belongsToMany(Critici, { through: 'AprobariArticole', foreignKey: 'IdCritic' });
-    Critici.belongsToMany(CriticiConferinte, { through: 'AprobariArticole', foreignKey: 'IdCritic' });
-  
-    AprobariArticole.belongsToMany(CriticiConferinte, { through: 'RecenziiArticole', foreignKey: 'IdArticol' });
-    CriticiConferinte.belongsToMany(AprobariArticole, { through: 'RecenziiArticole', foreignKey: 'IdCritic' });
+    Conferinte.belongsToMany(Critici, {as:"Critici", through:"CriticiConferinte", foreignKey:"IdConferinta"})
+    Critici.belongsToMany(Conferinte, {as:"Conferinte", through:"CriticiConferinte", foreignKey:"IdCritic"})
+
+    Articole.hasMany(RecenziiArticole, {as:"Recenzii", foreignKey:"IdArticol"})
+    RecenziiArticole.belongsTo(Articole, {as:"Articol", foreignKey:"IdArticol"})
+
+    Critici.hasMany(RecenziiArticole, {as:"Recenzii", foreignKey:"IdCritic"});
+    RecenziiArticole.belongsTo(Critici, {as:"Critic", foreignKey:"IdCritic"});
+    
 }
 
 export default DB_INIT;

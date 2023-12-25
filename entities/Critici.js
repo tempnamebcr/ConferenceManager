@@ -16,3 +16,7 @@ const Critici = db.define("Critici",
         allowNull:false
     }
 })
+
+
+
+export default Critici;

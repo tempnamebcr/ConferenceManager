@@ -10,7 +10,7 @@ const Articole = db.define("Articole",
         autoIncrement:true,
         allowNull:false
     },
-    Continut:
+    Continut:   
     {
         type:Sequelize.STRING,
         allowNull:false
@@ -21,5 +21,14 @@ const Articole = db.define("Articole",
         primaryKey:true,
         autoIncrement:false,
         allowNull:false
+    },
+    IdCriticCareAproba:
+    {
+        type:Sequelize.INTEGER,
+        primaryKey:true,
+        autoIncrement:false,
+        allowNull:true
     }
 })
+
+export default Articole;
