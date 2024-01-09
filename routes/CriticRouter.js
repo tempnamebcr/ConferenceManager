@@ -1,5 +1,5 @@
 import express from 'express'
-import { getCriticById, getCritici, createCritic, deleteCritici } from '../dataAccess/CriticDA';
+import { getCriticById, getCritici, createCritic, deleteCritici } from '../dataAccess/CriticDA.js';
 let criticiRouter = express.Router();
 
 criticiRouter.route('/critic').post(async (req, res) =>{

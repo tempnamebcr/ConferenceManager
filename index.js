@@ -1,5 +1,6 @@
 import express from 'express';
 import env from 'dotenv';
+import cors from 'cors'
 import DB_INIT from './entities/DB_INIT.js';
 import createDbRouter from './routes/createDBRouter.js';
 import autoriRouter from './routes/AutorRouter.js';
@@ -7,6 +8,7 @@ import conferintaRouter from './routes/ConferintaRouter.js';
 import criticRouter from './routes/CriticRouter.js';
 import organizatorRouter from './routes/OrganizatorRouter.js';
 import recenzieArticolRouter from './routes/RecenzieArticolRouter.js';
+import articoleRouter from './routes/ArticolRouter.js';
 import Articole from './entities/Articole.js';
 import Autori from './entities/Autori.js';
 import Conferinte from './entities/Conferinte.js';
@@ -15,8 +17,12 @@ import CriticiConferinte from './entities/CriticiConferinte.js';
 import Organizatori from './entities/Organizatori.js';
 import RecenziiArticole from './entities/RecenziiArticole.js';
 
+// const cors = require('cors');
+
 env.config();
 let app=express();
+
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({

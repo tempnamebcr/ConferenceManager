@@ -1,5 +1,5 @@
 import express from 'express'
-import { getConferintaById, getConferinte, createConferinta, deleteConferinte } from '../dataAccess/ConferintaDA';
+import { getConferintaById, getConferinte, createConferinta, deleteConferinte } from '../dataAccess/ConferintaDA.js';
 let conferinteRouter = express.Router();
 
 conferinteRouter.route('/conferinta').post(async (req, res) =>{

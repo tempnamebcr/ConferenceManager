@@ -14,7 +14,7 @@ const Critici = db.define("Critici",
     {
         type:Sequelize.STRING,
         allowNull:false
-    }
+    }   
 })
 
 
