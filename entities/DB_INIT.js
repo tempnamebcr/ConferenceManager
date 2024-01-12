@@ -40,6 +40,9 @@ function FK_Config(){
     Articole.hasOne(Critici, {foreignKey: 'IdCriticCareAproba', as: 'CriticCareAproba'});
     Critici.belongsToMany(Articole, {foreignKey: 'IdCriticCareAproba', through:"IdCriticCareAproba", as: 'ArticoleAprobate'})
 
+    Articole.hasOne(Conferinte, {foreignKey: 'IdConferinta', as: 'Conferinta'});
+    Critici.belongsToMany(Articole, {foreignKey: 'IdConferinta', through:"IdConferinta", as: 'Articole'})
+
     Autori.hasMany(Articole, {as:"Articole", foreignKey:"IdAutor"});
     Articole.belongsTo(Autori, {as:"Autor", foreignKey:"IdAutor"})
   
@@ -51,6 +54,8 @@ function FK_Config(){
 
     Critici.hasMany(RecenziiArticole, {as:"Recenzii", foreignKey:"IdCritic"});
     RecenziiArticole.belongsTo(Critici, {as:"Critic", foreignKey:"IdCritic"});
+
+
     
 }
 

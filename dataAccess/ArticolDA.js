@@ -1,8 +1,21 @@
 import Articole from "../entities/Articole.js"
-import Autori from "../entities/Autori.js"
+import Conferinte from "../entities/Conferinte.js"
+import Critici from "../entities/Critici.js"
+import CriticiConferinte from "../entities/CriticiConferinte.js"
 
 async function createArticol(articol){
-    return await Articole.create(articol);
+    let articolNou = await Articole.create(articol);
+    const conferinta = await Conferinte.findOne({
+        where: { IdConferinta: articolNou.IdConferinta },
+    });
+    const criticiIds = await CriticiConferinte.findAll({
+        attributes: ['IdCritic'],
+        where: { IdConferinta: articolNou.IdConferinta }
+    });
+    articolNou.IdCritic1 = criticiIds[0].IdCritic;
+    articolNou.IdCritic2 = criticiIds[1].IdCritic;
+    await articolNou.save();
+    return articolNou;
 }
 async function getArticole(){
     return await Articole.findAll({include:["Autor"]});

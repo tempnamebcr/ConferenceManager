@@ -18,15 +18,41 @@ const Articole = db.define("Articole",
     IdAutor:
     {
         type:Sequelize.INTEGER,
-        primaryKey:true,
+        foreignKey:true,
         autoIncrement:false,
         allowNull:false
     },
     IdCriticCareAproba:
     {
         type:Sequelize.INTEGER,
-        primaryKey:true,
+        foreignKey:true,
         autoIncrement:false,
+        allowNull:true
+    },
+    IdCritic1:
+    {
+        type:Sequelize.INTEGER,
+        foreignKey:true,
+        autoIncrement:false,
+        allowNull:true
+    },
+    IdCritic2:
+    {
+        type:Sequelize.INTEGER,
+        foreignKey:true,
+        autoIncrement:false,
+        allowNull:true
+    },
+    IdConferinta:
+    {
+        type:Sequelize.INTEGER,
+        foreignKey:true,
+        autoIncrement:false,
+        allowNull:true
+    },
+    Feedback:
+    {
+        type:Sequelize.STRING,
         allowNull:true
     }
 })
