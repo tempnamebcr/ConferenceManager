@@ -1,65 +1,70 @@
 import React, { useState, useEffect } from 'react';
 
 const Critic = () => {
-  const [autori, setAutori] = useState(null);
+  const [critici, setCritici] = useState(null);
   const [articole, setArticole] = useState(null);
   const [conferinte, setConferinte] = useState(null);
   const [currentCritic, setCurrentCritic] = useState(null);
 
-    const log = () => {
-        console.log(conferinte);
-    }
-
-    const handleAutorChange = (event) => {
-        const selectedAutorId = event.target.value;
-        setCurrentCritic(selectedAutorId);
+    //autorul curent
+    const handleCriticChange = (event) => {
+        const selectedCriticId = event.target.value;
+        setCurrentCritic(selectedCriticId);
       };
 
-    const handleCriticActivity = async (e, idCritic, feedback) => {
-        let articleContent = document.getElementById("articleContent");
-        if (articleContent.value == ''){
-            window.alert("introduceti continutul articolului!!");
-        }
-        else if (currentCritic == null){
-            window.alert("selectati un autor");
+
+    // functie dinamica care aproba/lasa feedback in functie de cum este apelata
+    const handleCriticActivity = async (e, idCritic, feedback, idRecenzie) => {
+        if(currentCritic == null){
+          window.alert("selectati criticul")
         }
         else {
-        e.preventDefault();
-        try {
-            const response = await fetch('http://localhost:3002/api/articol', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(
-                {
-                    Feedback:'',
-                    IdCriticCareAproba:'',
-                }
-            ),
-            });
-
-            if (response.ok) {
-            console.log('Articol creat cu success!');
-            } else {
-            console.error('Eroare la crearea articolului.');
-            }
-        } catch (error) {
-            console.error('Eroare de rețea:', error);
+          let feedbackInput = document.getElementById(feedback);
+          let feedbackText = null;
+          
+          // daca se apasa butonul "aproba", nu trimite textul din feedback
+  
+          if (idCritic == null){
+            feedbackText = feedbackInput.value;
+          }
+          e.preventDefault();
+          try {
+              console.log('a');
+              const response = await fetch('http://localhost:3002/api/articol/'+idRecenzie, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(
+                  {
+                      Feedback:feedbackText,
+                      IdCriticCareAproba:idCritic,
+                  }
+              ),
+              });
+  
+              if (response.ok) {
+              console.log('schimbare facuta cu success!');
+              } else {
+              console.error('Eroare.');
+              }
+          } catch (error) {
+              console.error('Eroare de rețea:', error);
+          }
         }
-        }
+        
     }
 
     const current = () => {
-        if (!autori || autori.length === 0) {
+        if (!critici || critici.length === 0) {
           return null;
         }
         return (
-          <select onChange={handleAutorChange} value={currentCritic || ''}>
-            <option value="">Selecteaza un autor</option>
-            {autori.map(autor => (
-              <option key={autor.Id} value={autor.Id}>
-                {autor.Nume}
+          <select onChange={handleCriticChange} value={currentCritic || ''}>
+            <option value="">Selecteaza un critic</option>
+            {critici.map(critic => (
+              <option key={critic.Id} value={critic.Id}>
+                {critic.Nume}
               </option>
             ))}
           </select>
@@ -75,14 +80,14 @@ const Critic = () => {
             <p>Lista articole</p>
             {articole.map(articol => (
                 <div>
-                    <span id={articol.Id}>
+                    <span id={`span${articol.Id}`}>
                         {articol.Continut}
                     </span>
-                    <button onClick={(e) => handleCriticActivity(e, currentCritic.Id, null)}>
+                    <button onClick={(e) => handleCriticActivity(e, currentCritic, null, articol.Id)}>
                         Aproba
                     </button>
-                    <input id="feedback" type="text"/>
-                    <button onClick={(e) => handleCriticActivity(e, null, 'asdasda')}>
+                    <input id={`${articol.Id}`} type="text"/>
+                    <button onClick={(e) => handleCriticActivity(e, null, `${articol.Id}` , articol.Id)}>
                         Lasa feedback
                     </button>
               </div>
@@ -92,9 +97,9 @@ const Critic = () => {
       };
 
   useEffect(() => {
-    fetch('http://localhost:3002/api/autori')
+    fetch('http://localhost:3002/api/critici')
       .then(response => response.json())
-      .then(data => setAutori(data))
+      .then(data => setCritici(data))
       .catch(error => console.error('Error fetching authors data:', error));
     fetch('http://localhost:3002/api/articole')
       .then(response => response.json())

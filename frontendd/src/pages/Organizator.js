@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 const Organizator = () => {
   const [currentOrganizator, setCurrentOrganizator] = useState(null);
   const [critici, setCritici] = useState(null);
+  const [articole, setArticole] = useState(null);
   const [criticiSelectati, setCriticiSelectati] = useState([]);
   const [organizatori, setOrganizatori] = useState(null);
 
@@ -119,11 +120,40 @@ const Organizator = () => {
     )
   }
 
+
+  //listeaza articolele, cele care au fost aprobate au status aprobat, cele care au primit feedback
+  //si asteapta retrimitere sunt In feedback, iar restul sunt waiting
+  const listaArticole = () => {
+    if (!articole) {
+      return '';
+    }
+    return (
+      <div>
+        {articole.map(articol => (
+          <div key={articol.Id}>
+            <span>{articol.Continut} - </span>
+            <span>
+            <span>
+            Status: {articol.Feedback !== null ? 'In Feedback' : ''}
+            {articol.IdCriticCareAproba !== null ? 'Aprobat' : ''}
+            {(articol.Feedback === null && articol.IdCriticCareAproba === null) ? 'Waiting' : ''}
+          </span>
+          </span>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   useEffect(() => {
 
     fetch('http://localhost:3002/api/critici')
       .then(response => response.json())
       .then(data => setCritici(data))
+      .catch(error => console.error('Error fetching articles data:', error));
+    fetch('http://localhost:3002/api/articole')
+      .then(response => response.json())
+      .then(data => setArticole(data))
       .catch(error => console.error('Error fetching articles data:', error));
 
     fetch('http://localhost:3002/api/organizatori')
@@ -137,6 +167,7 @@ const Organizator = () => {
       <h1>Organizator</h1>
       {current()}
       {creareConferinta()}
+      {listaArticole()}
     </div>
   );
 };

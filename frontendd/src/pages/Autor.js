@@ -4,10 +4,7 @@ const Autor = () => {
   const [autori, setAutori] = useState(null);
   const [conferinte, setConferinte] = useState(null);
   const [currentAutor, setCurrentAutor] = useState(null);
-
-    const log = () => {
-        console.log(conferinte);
-    }
+  const [articole, setArticole] = useState(null);
 
     const handleAutorChange = (event) => {
         const selectedAutorId = event.target.value;
@@ -56,6 +53,35 @@ const Autor = () => {
         }
     }
 
+    //functia care retrimite un articol dupa ce primeste feedback
+
+    const resendArticle = async(e, idArticol) => {
+      let input = document.getElementById("resend"+idArticol);
+      let newContent = input.value;
+      try {
+        const response = await fetch('http://localhost:3002/api/articol/'+idArticol, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            {
+                Continut:newContent
+            }
+        ),
+        });
+
+        if (response.ok) {
+        console.log('articol retrimis cu success!');
+        } else {
+        console.error('Eroare la trimiterea continutului nou.');
+        }
+    } catch (error) {
+        console.error('Eroare de rețea:', error);
+    }
+    }
+
+    //autorul curent
     const current = () => {
         if (!autori || autori.length === 0) {
           return null;
@@ -93,10 +119,37 @@ const Autor = () => {
         );
       };
 
+      //daca un articol are feedback, ofera posibilitatea de a-l rescrie
+      const listaArticole = () => {
+        if (!articole || articole.length === 0) {
+          return null;
+        }
+        return (
+          <div value=''>
+            <p>Lista articole cu feedback</p>
+            {articole.map(articol => (
+              articol.Feedback !== null && (
+                <div key={articol.Id} id={`articol-${articol.Id}`}>
+                  <span>{articol.Continut}</span>
+                  <input type="text" id={`resend${articol.Id}`}/>
+                  <button onClick={(e) => resendArticle(e, articol.Id)}>
+                    Retrimite!
+                  </button>
+                </div>
+              )
+            ))}
+          </div>
+        );
+      };
+
   useEffect(() => {
     fetch('http://localhost:3002/api/autori')
       .then(response => response.json())
       .then(data => setAutori(data))
+      .catch(error => console.error('Error fetching authors data:', error));
+    fetch('http://localhost:3002/api/articole')
+      .then(response => response.json())
+      .then(data => setArticole(data))
       .catch(error => console.error('Error fetching authors data:', error));
     fetch('http://localhost:3002/api/conferinte')
       .then(response => response.json())
@@ -109,10 +162,11 @@ const Autor = () => {
     <div>
       <h1>Autori</h1>
       {current()}
-      {log()}
       {listaConferinte()}
       <p>Continut articol:</p>
       <input id="articleContent" type="text"/>
+      {listaArticole()}
+
     </div>
   );
 };
